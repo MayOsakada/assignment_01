@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<script src="js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="css/sample.css">
+<title>じゃんけん</title>
+</head>
+<body>
+
+<header>
+  <div id="header_janken"><h1>じゃんけん…</h1></div>
+  <div id="header_pon"><h1>ぽん！</h1></div>
+</header>
+
+<main>
+  <div id="muteki_mode">
+    <h3>無敵モード発動中!　無敵モード発動中!　無敵モード発動中!</h3>
+  </div>
+  <div id="you_are">
+    <div><span id="judgement_text"></span></div>
+  </div> 
+
+  <div id="cpu_you">
+    <!--かえるちゃん(CPU)-->
+    <div id="cpu">
+        <div id="cpu_img"><img src="img/kaeru_1.png" alt="CPU" width="350px" height="350px"></div>
+        <div id="cpu_text"><h2>CPU</h2></div>
+        <div id="cpu_count">XX</div>
+    </div>
+    <!--うさぎさん（YOU）-->
+    <div id="you">
+      <div id="you_img"><img src="img/usagi_1.png" alt="YOU" width="350px" height="350px"></div>
+      <div id="you_text"><h2>あなた</h2></div>
+      <div id="you_count">XX</div>
+    </div>
+  </div>
+
+  <!--グーチョキパー-->
+  <ul id="you_hand">
+    <li class="btn_hand" data-hand="0">グー</li>
+    <li class="btn_hand" data-hand="1">チョキ</li>
+    <li class="btn_hand" data-hand="2">パー</li>
+  </ul>
+
+  <ul id="next_reset"> 
+    <li id="next">NEXT</li>
+    <li id="reset">RESET</li>
+  </ul>
+
+</main>
+
+<footer></footer>
+<script>
+//-------じゃんけん用のSCRIPTを書いてください-------
+
+//-------変数定義-------
+let judgement_text; //勝ち負けあいこ結果表示用
+let cpu_hand;//CPの出した手
+let you_hand;//あなたの出した手
+let cpu_count = 0;//CPUの勝ち数
+let you_count = 0;//YOUの勝ち数
+let cpu_img;//CPUの出した手の画像
+let you_img;//あなたの出した手の画像
+let muteki_num = 0;//無敵モード用
+
+
+
+//-------初期画面起動時の状態-------
+//「ぽん！」を非表示
+$("#header_pon").hide();
+//NEXTボタン、RESETボタンを非表示
+$("#next_reset").hide();
+//無敵モードを非表示
+$("#muteki_mode").hide();
+
+
+
+//-------グーチョキパー押下時----------
+$(".btn_hand").on("click",function(){
+
+  //-------共通画面レイアウト変更------
+  //headerの「じゃんけん…」を消す
+  $("#header_janken").hide();
+  //headerに「ぽん！」を表示する
+  $("#header_pon").show();
+  //グーチョキパーを非表示
+  $("#you_hand").hide();
+  //NEXTボタン、RESETボタンを非表示
+  $("#next_reset").show();
+
+
+  //--------じゃんけん勝敗決め---------
+  //自分のグーチョキパー判定
+  you_hand =  $(this).data('hand');//0=gu,1=choki,2=pa
+  
+  //CPUのグーチョキパー決め
+  //無敵モード中
+  if(muteki_num !== 0){
+    //何連勝するか決める
+    console.log(muteki_num);
+    if(muteki_num==5){
+      muteki_num =Math.ceil( Math.random() * 4 );//1~4
+    }
+    //muteki_num=0になるまで勝ち続ける
+    if(muteki_num > 0){
+      //CPUの手を決める
+      if(you_hand==0){//あなたがぐーの時
+        cpu_hand=1;//CPUはチョキ
+      }
+      if(you_hand==1){//チョキ
+        cpu_hand=2;//パー
+      }
+      if(you_hand==2){//パー
+        cpu_hand=0;//グー
+      }
+
+      muteki_num = muteki_num - 1;
+    }
+  }else{
+    cpu_hand =Math.floor(Math.random()*3) ;//0=gu,1=choki,2=pa
+  }
+  console.log(muteki_num);
+
+  //勝敗決め(自分の手 - 相手の手 + 3) % 3 
+  let judgement =(you_hand - cpu_hand +3)%3; //0 = 引き分け 1 = 負け 2 = 勝ち
+  
+  //-------出し手画像を出す用編集----------  
+  cpu_img = "img/janken_kaeru_" + cpu_hand + ".png";
+  you_img = "img/janken_usagi_" + you_hand + ".png";
+
+
+
+  //-------変数に勝敗ごとの値を入れる--------
+  //-------あいこのとき--------
+  if(judgement==0){
+    judgement_text = "あいこ";//勝敗結果表示用
+  }
+  //-------負けのとき--------
+  if(judgement==1){
+    judgement_text ="負け";//勝敗結果表示用
+    cpu_count = cpu_count+1;//カウント用
+  }
+  //-------勝ちのとき--------
+  if(judgement==2){
+    judgement_text = "勝ち";//勝敗結果表示用
+    you_count = you_count+1;//カウント用
+  }
+
+
+  //----------処理後の画面レイアウト-------
+  //あなたの出した手の画像を表示
+  $('img[src="img/usagi_1.png"]').attr('src',you_img);
+  //CPUの出した手の画像を表示
+  $('img[src="img/kaeru_1.png"]').attr('src',cpu_img);
+  //勝敗結果を表示
+  $("#judgement_text").show();
+  $("#judgement_text").html(judgement_text);
+  //カウントを表示
+  $("#cpu_count").html(cpu_count);
+  $("#you_count").html(you_count);
+
+  //------NEXT押下時の処理-------
+  $("#next").on("click",function(){
+
+    //無敵モード中でなければ無敵判定を行う
+    if(muteki_num ==0){
+      //5の時無敵モードになれる
+      muteki_num =Math.floor(Math.random()*6)//0~5
+                                                  console.log(muteki_num);
+      //5以外は0に戻す（無敵モード＝0の時）
+      if(muteki_num !== 5){
+      muteki_num = 0;
+      }
+    }
+                                                    console.log(muteki_num);
+    //無敵モードの時、無敵コールが流れる
+    if(muteki_num !== 0){
+      $("#muteki_mode").children('h3').show();
+      setInterval(function() {
+        $('#muteki_mode').fadeOut('slow', function() {
+          $(this).fadeIn('slow');
+        });
+      }, 3000);
+    }else{//無敵モードではない時
+      $("#muteki_mode").children('h3').hide();
+    }
+
+    //かめウサギの画像に戻る
+    $('#cpu_img').children('img').attr('src', 'img/kaeru_1.png');
+    $('#you_img').children('img').attr('src', 'img/usagi_1.png');
+    //じゃんけん....の文字になる
+    $("#header_janken").show();
+    //「ぽん！」を非表示
+    $("#header_pon").hide();
+    //NEXTボタン、RESETボタンを非表示
+    $("#next_reset").hide();
+    //グーチョキパーを表示
+    $("#you_hand").show();  
+    //勝敗結果を非表示
+    $("#judgement_text").hide();
+    console.log(muteki_num);
+  });
+
+  //------RESET押下時の処理-------
+  $("#reset").on("click",function(){
+    cpu_count = 0;
+    you_count = 0;
+    //カウントを表示
+    $("#cpu_count").html(cpu_count);
+    $("#you_count").html(you_count);
+    //かめウサギの画像に戻る
+    $('#cpu_img').children('img').attr('src', 'img/kaeru_1.png');
+    $('#you_img').children('img').attr('src', 'img/usagi_1.png');
+    //じゃんけん....の文字になる
+    $("#header_janken").show();
+    //「ぽん！」を非表示
+    $("#header_pon").hide();
+    //NEXTボタン、RESETボタンを非表示
+    $("#next_reset").hide();
+    //グーチョキパーを表示
+    $("#you_hand").show();  
+    //勝敗結果を非表示
+    $("#judgement_text").hide();
+    //無敵モード解除
+    muteki_num = 0;
+    $("#muteki_mode").children('h3').hide();
+
+  });
+
+
+
+});
+
+
+ 
+// //-------グーをクリックした時----------
+// $("#gu_btn").on("click",function(){
+
+//   //-------画面レイアウト変更-------
+//   //headerの「じゃんけん…」を消す
+//   $("#header_janken").hide();
+//   //headerに「ぽん！」を表示する
+//   $("#header_pon").show();
+//   //うさぎちゃんをグーの画像に書き換え
+//   $('img[src="img/usagi_1.png"]').attr('src','img/janken_gu.png');
+//   //グーチョキパーを非表示
+//   $("#gu_btn").hide();
+//   $("#cho_btn").hide();
+//   $("#pa_btn").hide();
+//   //NEXTボタンを表示
+//   $("#next").show();
+//   //RESETボタンを表示
+//   $("#reset").show();  
+
+
+//   //------じゃんけんジャッジ処理------
+//   //CPの出す手を決める 1=gu,2=choki,3=pa
+//   js_pc_hands =Math.ceil(Math.random()*3);
+
+//   //CPがグーの時＝あいこ
+//   if(js_pc_hands==1){
+//     js_judgement = "あいこ";
+//     js_pc_hands = "グー";
+    
+//     //かえるをグーの画像に置き換え
+//     $('img[src="img/kaeru_1.png"]').attr('src','img/janken_gu.png');
+
+//   }
+//   //CPがチョキの時＝勝ち
+//   if(js_pc_hands==2){
+//     js_judgement = "勝ち";
+//     js_pc_hands = "チョキ";
+//     you_count = you_count + 1;
+
+//     //かえるをチョキの画像に置き換え
+//     $('img[src="img/kaeru_1.png"]').attr('src','img/janken_choki.png');  
+//   }
+//   //CPがパーの時＝負け
+//   if(js_pc_hands==3){
+//     js_judgement = "負け";
+//     js_pc_hands = "パー";
+//     cpu_count = cpu_count + 1;
+
+//     //かえるをチョキの画像に置き換え
+//     $('img[src="img/kaeru_1.png"]').attr('src','img/janken_pa.png'); 
+//   }
+// //CPの手を表示する
+//   $("#pc_hands").html(js_pc_hands);
+
+// //結果を表示する
+//   $("#judgement").html(js_judgement);
+
+
+// });    
+
+// //-------チョキをクリックした時-------
+// $("#cho_btn").on("click",function(){
+
+//   //-------画面レイアウト変更-------
+//   //headerの「じゃんけん…」を消す
+//   $("#header_janken").hide();
+//   //headerに「ぽん！」を表示する
+//   $("#header_pon").show();
+//   //うさぎちゃんをチョキの画像に書き換え
+//   $('img[src="img/usagi_1.png"]').attr('src','img/janken_choki.png');
+//   //グーチョキパーを非表示
+//   $("#gu_btn").hide();
+//   $("#cho_btn").hide();
+//   $("#pa_btn").hide();
+//   //NEXTボタンを表示
+//   $("#next").show();
+//   //RESETボタンを表示
+//   $("#reset").show(); 
+
+
+//   //------じゃんけんジャッジ処理------
+//   //CPの出す手を決める 1=gu,2=choki,3=pa
+//   js_pc_hands =Math.ceil(Math.random()*3);
+
+//   //CPがグーの時＝負け
+//   if(js_pc_hands==1){
+//     js_judgement = "負け";
+//     js_pc_hands = "グー";
+//     cpu_count = cpu_count + 1;
+//     console.log(cpu_count);
+//     //かえるをグーの画像に置き換え
+//     $('img[src="img/kaeru_1.png"]').attr('src','img/janken_gu.png');    
+//   }
+//   //CPがチョキの時＝あいこ
+//   if(js_pc_hands==2){
+//     js_judgement = "あいこ";
+//     js_pc_hands = "チョキ";
+
+//     //かえるをチョキの画像に置き換え
+//     $('img[src="img/kaeru_1.png"]').attr('src','img/janken_choki.png'); 
+//   }
+//   //CPがパーの時＝勝ち
+//   if(js_pc_hands==3){
+//     js_judgement = "勝ち";
+//     js_pc_hands = "パー";
+//     you_count = you_count + 1;
+//     console.log(you_count);
+//     //かえるをパーの画像に置き換え
+//     $('img[src="img/kaeru_1.png"]').attr('src','img/janken_pa.png'); 
+//   }
+//   //CPの手を表示する
+//   $("#pc_hands").html(js_pc_hands);
+
+//   //結果を表示する
+//   $("#judgement").html(js_judgement);
+  
+  
+
+// });    
+
+
+// //-------パーをクリックした時-------
+// $("#pa_btn").on("click",function(){
+
+
+//   //-------画面レイアウト変更-------
+//   //headerの「じゃんけん…」を消す
+//   $("#header_janken").hide();
+//   //headerに「ぽん！」を表示する
+//   $("#header_pon").show();
+//   //うさぎちゃんをパーの画像に書き換え
+//   $('img[src="img/usagi_1.png"]').attr('src','img/janken_pa.png');
+//   //グーチョキパーを非表示
+//   $("#gu_btn").hide();
+//   $("#cho_btn").hide();
+//   $("#pa_btn").hide();
+//   //NEXTボタンを表示
+//   $("#next").show();
+//   //RESETボタンを表示
+//   $("#reset").show();  
+
+
+//   //------じゃんけんジャッジ処理------
+//   //CPの出す手を決める 1=gu,2=choki,3=pa
+//   js_pc_hands =Math.ceil(Math.random()*3);
+
+//   //CPがグーの時＝勝ち
+//   if(js_pc_hands==1){
+//     js_judgement = "勝ち";
+//     js_pc_hands = "グー";
+//     you_count = you_count + 1;
+
+//     //かえるをグーの画像に置き換え
+//     $('img[src="img/kaeru_1.png"]').attr('src','img/janken_gu.png');   
+//   }
+//   //CPがチョキの時＝負け
+//   if(js_pc_hands==2){
+//     js_judgement = "負け";
+//     js_pc_hands = "チョキ";
+//     cpu_count = cpu_count + 1;
+
+//     //かえるをチョキの画像に置き換え
+//     $('img[src="img/kaeru_1.png"]').attr('src','img/janken_choki.png'); 
+//   }
+//   //CPがパーの時＝あいこ
+//   if(js_pc_hands==3){
+//     js_judgement = "あいこ";
+//     js_pc_hands = "パー";
+
+//     //かえるをチョキの画像に置き換え
+//     $('img[src="img/kaeru_1.png"]').attr('src','img/janken_pa.png'); 
+//   }
+//   //CPの手を表示する
+//   $("#pc_hands").html(js_pc_hands);
+
+//   //結果を表示する
+//   $("#judgement").html(js_judgement);
+
+// });        
+
+
+// //------処理後のレイアウト変更
+//   //勝敗を表示
+//   console.log(cpu_count);
+//   console.log(you_count);
+//   $("#cpu_count").html(cpu_count);  
+//   $("#you_count").html(you_count);  
+
+
+// //------NEXT押下時の処理-------
+// $("#next").on("click",function(){
+//   //かめウサギの画像になる
+//   //じゃんけん....の文字になる
+//   //クリック有効化
+
+
+
+// });
+
+// //------RESET押下時の処理-------
+// $("#reset").on("click",function(){
+//   cpu_count = 0;
+//   you_count = 0;
+
+// });   
+
+
+    
+
+</script>
+</body>
+</html>
+
