@@ -1,163 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Alarm</title>
-<script src="js/jquery-2.1.3.min.js"></script>
-<link rel="stylesheet" href="css/sample.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatアプリ</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-<header>
-<h1>今日はもういいよアラーム</h1>
-<div id="viewTime"></div>
-</header>
-    <div id="setarea">
-       <div id="timeset">
-           <p>アラーム時間</p>
-           <div id="selectbox" style="text-align:-webkit-center;">
-                <select id="hour"></select>
-                <select id="minutes"></select>
+    <!-- コンテンツ表示画面 -->
+    <div class="wrapper">
+        <header class="p-header">
+            <h1 >ちゃっと</h1>
+        </header>
+
+        <div id="output" style="height:800px; overflow:auto; border:1px solid white;">
+            <div id="ot">
+                <div id="ot-icon"><img src ="imgs/buke.png"/></div>
+                <div id="ot-name">nannchu</div>
+                <div id="ot-time">12:23</div>
             </div>
-       </div> 
-       <div id="sendtime" style="text-align:-webkit-center;">
-           <button id="savebutton">セット</button>
-       </div>
-    </div> 
-    <div id="outputarea">
-        <table id="outputtable">
-              <!-- 入力データが入る -->
-        </table>
-    </div>
-<script>
-    //初期表示
-    //セレクトボックス内に0～23をセット
-    let h ='<option hidden>選択してください（時）</option>';
-    for (let i=0; i<24; i++){
-        h += '<option value="'+i+'">'+i+'</option>';
-    }
-    $("#hour").html(h);
-    //セレクトボックス内に0~59をセット
-    let m ='<option hidden>選択してください（分）</option>';
-    for(let i=0; i<60; i++){
-        m += '<option value="'+i+'">'+i+'</option>';
-    }
-    $("#minutes").html(m);
-
-    //ページの読み込み（ローカルストレージに設定したタイマーを表示）
-    for(let i=0; i<localStorage.length; i++){
-        const key = localStorage.key(i);
-        const value= localStorage.getItem(key);
-        const html = '<tr><th id="time'+key+'">'+value+'</th><td><button id="trash'+key+'" onClick="del('+key+')">削除</td></tr>';
-        $("#outputtable").append(html);
-    }
-
-    //一秒ごとに時間を表示
-    setInterval("timer()",60000);
-    setInterval("timer1()",1000);
-
-    function timer1(){
-        let now = new Date(); //nowのためのインスタンス作成
-        let p_hours = now.getHours();
-        let p_minutes = now.getMinutes();
-        //let p_seconds = now.getSeconds();
-        console.log(p_hours);
-
-        //現在時間の表示
-        if(p_hours<10 || p_minutes<10){
-            //01とかって表示したい//保留
-        }
-        $("#viewTime").html(p_hours + ":" + p_minutes);
-    }
-
-    function timer(){
-        //時間取得
-        let now = new Date(); //nowのためのインスタンス作成
-        let p_hours = now.getHours();
-        let p_minutes = now.getMinutes();
-        //let p_seconds = now.getSeconds();
-        console.log(p_hours);
-
-        // //現在時間の表示
-        // if(p_hours<10 || p_minutes<10 || p_seconds<10){
-        //     //01とかって表示したい//保留
-        // }
-        // $("#viewTime").html(p_hours + ":" + p_minutes);
-
-
-
-
-        //ローカルストレージより取得
-        for(let i=0; i<localStorage.length; i++){
-            let key = localStorage.key(i);
-            let value= localStorage.getItem(key);
-
-            let splittime = (String(value)).split(':'); //":"区切りで文字を分割し取得 [hours,minutes]
-
-                if(p_hours == splittime[0] && p_minutes == splittime[1]){
-                    //アラームを出す
-                    alert("時間です");
-
-                }
-        }
-
-
-
-    }
-
-
-
-
-
-
-        //セット クリックイベント
-        $("#savebutton").on("click",function(){
-            console.log(h);
-            const hour = $("#hour").val();//keyに入力された値を持ってくる
-            const minutes = $("#minutes").val();
-            let idcount = $("#outputtable tr").length;
-            let settime = hour+':'+minutes;
-            localStorage.setItem(idcount,settime);
-            
-            const html = '<tr><th id="time'+idcount+'">'+hour+':'+minutes+'</th><td><button id="trash'+idcount+'" onClick="del('+idcount+')">削除</td></tr>';
-            $("#outputtable").append(html);
-
-        });
-
+            <div id="ot-text">
+                <span>gonnzaresu</span>
+            </div>
+        </div>
         
-        //削除 クリックイベント関数
-        function del(idcount) {
+        <footer class="p-footer">
+            <div>名前：<input type="text" id="uname"></div>
+            <div>
+                <textarea id="text" cols="30" rows="2"></textarea>
+                <!--<button id="send">送信</button>-->
+            </div>
+                <ul class=icon-imgs> 
+                    <li class="imgs" data-img="0"><img src="imgs/buke.png" width="30"></li>
+                    <li class="imgs" data-img="1"><img src="imgs/tuku.jpg" width="30"></li>
+                    <li class="imgs" data-img="2"><img src="imgs/caram.png" width="30"></li>
+                </ul>
+        </footer>
+    </div>
 
-            $('#trash'+idcount).parent().parent().remove();
-            
-            //ローカルストレージからも削除
-            localStorage.removeItem(idcount);
-        }
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- JQuery -->
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDoJ5Xmi1R_-89osL5GcukSU0xPDMJH-tg",
+    authDomain: "js03-kadai-846b1.firebaseapp.com",
+    databaseURL: "https://js03-kadai-846b1.firebaseio.com",
+    projectId: "js03-kadai-846b1",
+    storageBucket: "js03-kadai-846b1.appspot.com",
+    messagingSenderId: "95792023036",
+    appId: "1:95792023036:web:b34efdc0922a9d33e41e79"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const ref = firebase.database().ref();  //お約束構文【必須！！！】
+
+  //アイコン処理
+  let d=0;
+  const img= ["buke.png","tuku.jpg","caram.png"];
+  $(".imgs").on("click",function(){
+      d=$(this).attr("data-img"); //アイコン押下後、data-imgの値取得
+  });
 
 
+  //データベースから受信処理
+  ref.on("child_added",function(data){ //data部分は何でもいいよ～
+      const v = data.val(); //送信されたオブジェクトを取得
+      const k = data.key; //ユニークキーを取得
+      const h = '<div id="ot"><div id="ot-icon"><img src ="imgs/'+img[v.icon]+'"/></div><div id="ot-name">'+v.uname+'</div><div id="ot-time">'+v.time+'</div></div><div id="ot-text"><span>'+v.text+'</span></div>'
+      $("#output").append(h);
+  });
 
-    // //2.clear クリックイベント
-    // $("#clear").on("click",function(){
-    //     localStorage.clear();
-    //     $("#list").empty();
-    //     alert("ok");
+  //時間の取得
+  let now = new Date(); //nowのためのインスタンス作成
+  let p_hours = now.getHours();
+  let p_minutes = now.getMinutes();
+  let p_time = p_hours +':'+ p_minutes;
 
-    // });
+  //関数定義
+  function send(){
+    const uname = $("#uname").val();
+    const text = $("#text").val();
+    const time = p_time;
+    const msg={
+        uname: uname,
+        text: text,
+        icon: d,
+        time: time
+    }
+    ref.push(msg);
+  }
 
+  $("#body").on("click",function(e){
+    console.log(e);  
+  })
 
+  //関数を使って文字を送信（Enter押下で実施）
+  $("#text").on("keydown",function(e){  //キー押下で処理が動く
+    if(e.keyCode ==13){ //Enterのときのキーコードは13！
+        send();
+        //送信した文字を下に表示する
+        const psconsole = $("#output");
+        psconsole.scrollTop(
+        psconsole[0].scrollHeight - psconsole.height()
+        );
+    };
 
-    // //3.ページ読み込み：保存データ取得表示 //リロードしても動くよ
-    // for(let i=0; i<localStorage.length; i++){
-    //     const key = localStorage.key(i);
-    //     const memo = localStorage.getItem(key);
-    //     const html = '<tr><td>'+key+'</td><td>'+memo+'</td></tr>';
-    //     $("#list").append(html);
-    // }
-
-
-
+  });
 
 </script>
-<footer><small>G's</small></footer>
+
+
 </body>
 </html>

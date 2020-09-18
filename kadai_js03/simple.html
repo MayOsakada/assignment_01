@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Chatアプリ</title>
+</head>
+<body>
+
+<!-- コンテンツ表示画面 -->
+<div>
+    <div>名前：<input type="text" id="uname"></div>
+    <div>
+        <textarea id="text" cols="30" rows="10"></textarea>
+        <button id="send">送信</button>
+    </div>
+    <div id="output" style="height: 1000px; overflow:auto; border:1px solid red;"></div>
+</div>
+
+
+<footer class="p-footer">
+    <div>名前：<input type="text" id="uname"></div>
+    <div>
+        <textarea id="text" cols="30" rows="10"></textarea>
+        <!--<button id="send">送信</button>-->
+    </div>
+</footer>
+
+<!--/ コンテンツ表示画面 -->
+
+
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- JQuery -->
+
+
+<!--** 以下Firebase **-->
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBT-b_qPeDqb15G4mC3u9uF7TL-xLK-Blc", //ユニークキー
+    authDomain: "dev17-a4ecb.firebaseapp.com",
+    databaseURL: "https://dev17-a4ecb.firebaseio.com",
+    projectId: "dev17-a4ecb",
+    storageBucket: "dev17-a4ecb.appspot.com",
+    messagingSenderId: "582278987748",
+    appId: "1:582278987748:web:0867319882c712eb1fd1f1"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const ref = firebase.database().ref();  //お約束構文
+   //.ref()=ユニークキーを自動で振ってくださいという意味
+   //（）内に値を入れればそれをキーにして値を入れていくよ
+
+  // 文字を送信する処理
+//   $("#send").on("click", function(){
+//       const uname = $("#uname").val();
+//       const text = $("#text").val();
+//       console.log(uname + text);
+//       const msg={
+//           uname: uname,
+//           text: text
+//       }
+//       ref.push(msg);//＝firebase.database().ref().push()
+//       //firebaseの任意のユニークキーが採番され、データベースに入る
+//       //ユニークキーで登録したいときは
+//       //const ref = firebase.database().ref("BOOK");(BOOKというキーに入る) 
+//       //red.set(msg); (set=決まった名前で入る)　
+
+//   });
+
+
+  //データベースから受信処理
+  ref.on("child_added",function(data){ //data部分は何でもいいよ～
+      const v = data.val(); //送信されたオブジェクトを取得
+      const k = data.key; //ユニークキーを取得
+      const h = '<p>'+v.uname+'<br>'+v.text+'</P>';
+      $("#output").append(h);
+  });
+
+
+  //イベント情報取得
+//   $("#text").on("keydown",function(e){  //キー押下で処理が動く
+//     console.log(e); //eに入るキーコードによって押下したキーのコードを取得できる
+//     if(e.keyCode ==13){ //Enterのときのキーコードは13！
+//         const uname = $("#uname").val();
+//         const text = $("#text").val();
+//         console.log(uname + text);
+//         const msg={
+//           uname: uname,
+//           text: text
+//         }
+//       ref.push(msg);
+//     }
+//   });
+
+  //Bodyをクリックしてどこがクリックしたかを取得が可能
+  //座標を確認できる
+//   $("#body").on("click",function(e){
+//       console.log(e);  
+//   })
+
+//関数定義
+function send(){
+        const uname = $("#uname").val();
+        const text = $("#text").val();
+        console.log(uname + text);
+        const msg={
+          uname: uname,
+          text: text
+        }
+      ref.push(msg);
+}
+
+
+//関数を使って文字を送信
+$("#send").on("click", function(){
+    send();
+    //送信した文字を下に表示する
+    const psconsole = $("#output");
+    psconsole.scrollTop(
+        psconsole[0].scrollHeight - psconsole.height()
+    );
+    console.log(psconsole);
+});
+
+//関数を使って文字を送信（Enter押下で実施）
+$("#text").on("keydown",function(e){  //キー押下で処理が動く
+
+
+});
+
+</script>
+
+
+</body>
+</html>
+
