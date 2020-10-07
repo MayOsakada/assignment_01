@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ajax.html</title>
+</head>
+
+<body>
+<h1 id="status">Ajax通信中...</h1>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+    //axiosでAjax送信
+    //sample.jsonにアクセス＞アクセスで来たら関数が動く（json=オブジェクト変数をテキスト化したもの）　
+    //ローカルストレージなど、どこかに変数の値を入れるときはテキスト化してからいれないと反映されない
+    //テキスト化したものを再び変数としてjsで使うにはオブジェクトの形にもどさなければいけなし（関数がある）
+    //それを自動でやってくれるのがaxios！
+    axios.get('sample.json').then(function (response) {
+        console.log(response.data);//通信OK （データが帰ってくる）
+        document.querySelector("#status").innerHTML="ajax.php/通信OK";
+    }).catch(function (error) {//例外処理
+        console.log(error);//通信Error
+    }).then(function () {//上記処理が成功し終わったときに何かしたかったらここに記述する
+        console.log("Last");//通信OK/Error後に処理を必ずさせたい場合（省略可能）
+    });
+
+</script>
+</body>
+</html>

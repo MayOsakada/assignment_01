@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>ぐるなびAPI</title>
+</head>
+<body>
+<div>
+    <!--アクセスキーを入力<input id="key" value="71c52f355ed8ddbfe592f85006ad1346" type="text" size="45">-->
+    <input type="button" id="btn" value="現在地から探す"><br>
+    <!--緯度lat: <input type="text" id="lat" value="35.667215">
+    経度lon: <input type="text" id="lon" value="139.713861">-->
+</div>
+
+<table id="table">
+    <tr>
+        <th>店舗名</th>
+        <th>駅名</th>
+        <th>徒歩</th>
+        <th>平均予算</th>
+    </tr>
+</table>
+<!--<div id="myMap" style="width:500px;height:500px;"></div>-->
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=Apd4P63xEbepcPRSAVyeglz43xbX_MqtBKX_cr2sIOTE" async defer></script>
+<script src="js/BmapQuery.js"></script>
+
+<script>
+
+
+
+//*****************************************************
+// Map
+// マップを使って動かそうね
+//*****************************************************
+//Initialization processing
+let map;
+const lati =0;
+const long =0;
+function GetMap(){
+    //------------------------------------------------------------------------
+    //1. Instance
+    //------------------------------------------------------------------------
+    map = new Bmap("#myMap");
+
+    //------------------------------------------------------------------------
+    //2. geolocation: Display Map
+    //------------------------------------------------------------------------
+    map.geolocation(function(data) {
+        //location
+        const lat = data.coords.latitude;
+        const lon = data.coords.longitude;
+        //Map
+        map.startMap(lat, lon, "load", 10);
+        //pin
+        map.pin(lat,lon,"#ff0000");
+
+        //取得した緯度経度をグローバル変数に格納する
+        lati = data.coords.latitude;
+        long = data.coords.longitude;
+
+    });
+
+
+
+}
+
+
+//*****************************************************
+// Click Event
+// ぐるなびAPIへデータRequest → APIサーバーからresponseデータ取得 
+//*****************************************************
+$("#btn").on("click", function() {
+    //送信データをObject変数で用意
+    //参考URL:https://api.gnavi.co.jp/api/manual/restsearch/
+    const data = {  //オブジェクトにＡＰＩへ渡す値を入れてあげる
+        keyid:　"71c52f355ed8ddbfe592f85006ad1346",//ぐるなびＡＰＩでは必須だよ
+        latitude:lati,
+        longitude:long,
+        private_room:1,
+        microphone:1,
+        projecter_screen:1
+    };
+    //Ajax（非同期通信）
+    axios.get('https://api.gnavi.co.jp/RestSearchAPI/v3/', {
+        params:data
+    })
+    .then(function (response) {
+        //データ受信成功！！showData関数にデータを渡す
+        showData(response.data);
+    }).catch(function (error) {
+        console.log(error);//通信Error
+    }).then(function () {
+        //console.log("Last");//通信OK/Error後に処理を必ずさせたい場合
+    });
+});
+
+//*****************************************************
+//ぐるなびデータ表示処理
+//*****************************************************
+function showData(data){
+    //データ確認用
+    console.log(data.rest);//dataオブジェクトのrestにいろんな情報が帰ってくる
+
+    //データを繰り返し処理で取得
+    const len  = data.rest.length; //データ数を取得
+    for( let i=0; i<len; i++){
+        $("#table").append('<tr><td>' + data.rest[i].name 
+        + '</td><td>' + data.rest[i].access.station + '</td>' + '</td><td>' + data.rest[i].access.walk + '</td>'
+        + '</td><td>' + data.rest[i].party + '</td></tr>');
+    };//dataの中のrestの中のi行目の店舗情報（名前、営業時間）を取得して書き出す
+}   //Console画面で対象のデータ選択し右クリック＞プロパティコピーで[i].nameなどオブジェクトの階層を取得できる
+
+</script>
+</body>
+</html>
