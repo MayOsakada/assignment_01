@@ -1,0 +1,120 @@
+body{
+    font-family: 游ゴシック,yugothic,ヒラギノ角ゴ pro w3,hiragino kaku gothic pro,メイリオ,Meiryo,ＭＳ Ｐゴシック,sans-serif;
+    background-color:black;
+    font-size: 100%;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+header{
+    border-bottom: 1px solid white;
+    text-align: center;
+    padding-bottom: 15px;
+}
+h1{
+    font-size: 150%;
+    text-align: center;
+}
+main{
+    width:100%;
+    display: block;
+    border-bottom:1px solid #ccc;
+    position:relative;
+}
+p{
+    text-align: center;
+    font-size: 150%;
+    margin:0 auto;
+}
+#check{
+    border-bottom: 1px solid white;
+    text-align: center;
+    padding-bottom: 15px;
+    padding-top:15px;
+
+}
+#setbutton{
+    padding-top:10px;
+    color:white;
+    text-align: center;
+}
+a{
+    color: white;
+}
+#setarea{
+    border-bottom: 1px solid white;
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+#timeset{
+    margin:0 auto;
+    justify-content: center;
+    text-align: center;
+
+}
+#timeset select{
+    cursor: pointer;
+    -webkit-appearance:none;
+    appearance:none;
+    width:30%;
+    padding:1em 1em;
+
+}
+#selectbox{
+    position:relative;
+}   
+#hour #munutes{
+    display: flex;
+}
+#outputarea{
+    margin:20px;
+    justify-content: center;
+    font-size: 30px; 
+    margin:0 auto;  
+    width:50%;
+}
+#outputarea p{
+    border-bottom: 0.5px solid gray;
+}
+
+   
+
+/* ul{
+    padding: 0;
+    border-top: 1px solid #000000;
+    display:table;  
+    table-layout: fixed;
+    width:96%;
+    font-size: 80%;
+    margin: 0 3%;
+    text-align: center;
+}
+li{
+    list-style-type:none;
+    border: 1px solid #666;
+    background-color: #fff;
+    display:table-cell; 
+    cursor: pointer;
+    color:#0d7dfd;
+}
+li:hover{
+    background: #0d7dfd;
+    color:#fff;
+}
+textarea{
+  margin: 10px 3%;
+  width: 95%;
+  height: 100px;
+  font-size:80%;
+  box-shadow: 3px 3px 3px 3px #555;
+  background-color:rgb(241, 239, 239);
+}
+#key{
+    margin:0 3%;
+    width: 95%;
+    font-size:80%;
+    background-color: #e1efff;
+    box-shadow: 3px 3px 3px 3px #555;
+} */
