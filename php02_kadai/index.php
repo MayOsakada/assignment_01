@@ -1,5 +1,6 @@
 
 <?php //テーブル読み込み
+            $alert = null;
             //1.  DB接続します//お約束　ＤＢ名だけつくる
             try {
             //Password:MAMP='root',XAMPP=''
