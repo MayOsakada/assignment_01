@@ -39,11 +39,12 @@
 
 <body>
 <header class="head">
+
 <h1>今日はもういいよ! アラーム</h1>
 <img src="tokei.png">
 <div id="viewTime"></div>
 </header>
-    
+
 
 <div id="check">
     <input  type="submit" value="今日はもういいですボタン" onClick="todayok()" >
@@ -83,12 +84,41 @@
         let p_hours = now.getHours();
         let p_minutes = now.getMinutes();
 
+        <?php //テーブル読み込み
+            //1.  DB接続します//お約束　ＤＢ名だけつくる
+            $hour = date("G");
+            $minutes = date("i");
+
+            try {
+            //Password:MAMP='root',XAMPP=''
+            $pdo = new PDO('mysql:dbname=gs_bm_table;charset=utf8;host=localhost', 'root', 'root');
+            } catch (PDOException $e) {
+            exit('DBConnectError:' . $e->getMessage());
+            }
+            //２．データ取得SQL作成(フラグに値がないものを取得する)
+            $stmt = $pdo->prepare("SELECT hour, minutes FROM alarm_table WHERE hour = $hour and minutes = $minutes and flag = 'x'");//テーブルにあるデータを持って来るだけなので文字列でいれるとかは気にしなくていいよ
+            $status = $stmt->execute();//成功失敗を格納
+            //３．データ表示
+            if ($status==false) {//取得失敗
+                //execute（SQL実行時にエラーがある場合）
+            $error = $stmt->errorInfo();
+            exit("ErrorQuery:".$error[2]);
+            }else{//取得成功
+            //Selectデータの数だけ自動でループしてくれる
+            //FETCH_ASSOC=http://php.net/manual/ja/pdostatement.fetch.php
+                while($result = $stmt->fetch(PDO::FETCH_ASSOC)){
 
 
+                    if($result['hour'] = $hour){
+                        if($result['minutes'] = $minutes){
+                            $alert = "alert('時間です') ";
+                        }
+                    }
+                }
+            }
+        ?>
 
-        //表示
-
-
+        <?= $alert ?>;
 
     }
 
