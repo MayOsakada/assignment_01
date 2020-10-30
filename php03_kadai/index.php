@@ -82,11 +82,11 @@ $view3="";
 
         if ($today == $date) {//<td><a href=add.php> 1~31</br>yotei1~3</a></td>
             // 今日の日付の場合は、class="today"をつける
-            $week .= '<td class="today"><a href=add.php>' . $day;
+            $week .= '<td class="today"><a href=add.php?day='.$day.'>' . $day.'</a>';
         } else {
-            $week .= '<td><a href=add.php>' . $day;
+            $week .= '<td><a href=add.php?day='.$day.'>' . $day.'</a>';
         }
-        $week .= '</br>'.$view.$view1.$view2 .'</a></td>';
+        $week .= '</br>'.$view.'</br>'.$view1.'</br>'.$view2 .'</td>';
 
         // 週終わり、または、月終わりの場合
         if ($youbi % 7 == 6 || $day == $day_count) {
@@ -115,33 +115,11 @@ $view3="";
     <meta charset="utf-8">
     <title>PHPカレンダー</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <style>
-        .container {
-            font-family: 'Noto Sans JP', sans-serif;
-            margin-top: 80px;
-        }
-        h3 {
-            margin-bottom: 30px;
-        }
-        th {
-            height: 30px;
-            text-align: center;
-        }
-        td {
-            height: 100px;
-        }
-        .today {
-            background: orange;
-        }
-        th:nth-of-type(1), td:nth-of-type(1) {
-            color: red;
-        }
-        th:nth-of-type(7), td:nth-of-type(7) {
-            color: blue;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+
 </head>
 <body>
+    <p class="title_jp">スケジュールカレンダー</p>
     <div class="container">
         <h3><a href="?ym=<?php echo $prev; ?>">&lt;</a> <?php echo $html_title; ?> <a href="?ym=<?php echo $next; ?>">&gt;</a></h3>
         <table class="table table-bordered">

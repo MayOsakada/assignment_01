@@ -1,0 +1,46 @@
+body{
+    color: #333;
+    font-family: 游ゴシック,yugothic,ヒラギノ角ゴ pro w3,hiragino kaku gothic pro,メイリオ,Meiryo,ＭＳ Ｐゴシック,sans-serif;
+    font-size: 120%;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+p.title_jp{
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin:30px auto;
+    color: white;
+    background-color: #c90d13;
+    padding-top: 10px;  
+    text-align: center;  
+    width: 93px;
+    border: 3px solid #c90d13;
+}
+.container {
+    font-family: 'Noto Sans JP', sans-serif;
+
+}
+h3 {
+    margin-bottom: 30px;
+}
+table{
+    table-layout:fixed;
+    width:60%;
+}
+th {
+    height: 30px;
+    text-align: center;
+}
+td {
+    height: 100px;
+}
+.today {
+    background-color: rgba(212, 207, 207, 0.698);
+}
+th:nth-of-type(1), td:nth-of-type(1) {
+    color: red;
+}
+th:nth-of-type(7), td:nth-of-type(7) {
+    color: blue;
+}
